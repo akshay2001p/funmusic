@@ -8,7 +8,7 @@ import {
   Squares2X2Icon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/solid'
-import { songsService, favoritesService } from './lib/supabase'
+import { songsService } from './lib/supabase'
 
 // Simple components without external dependencies
 interface Song {
