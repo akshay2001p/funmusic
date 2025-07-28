@@ -1,16 +1,19 @@
-name: Keep Supabase Alive
+name: Log Ping to Supabase
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Every 3 hours UTC
-  workflow_dispatch:       # Allows manual triggering
+    - cron: '0 */12 * * *'  # Every 12 hours
+  workflow_dispatch:
 
 jobs:
-  keep-alive:
+  log-ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase
+      - name: Insert ping log into Supabase
         run: |
-          curl -s "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/rest/v1/${{ secrets.SUPABASE_TABLE_NAME }}?limit=1" \
+          curl -s -o /dev/null -w "%{http_code}" \
+          -X POST "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/rest/v1/logs" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"source\": \"GitHub Action\"}"
